@@ -1,28 +1,45 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Zenova" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
+    <title>Zenova</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="antialiased bg-gray-50 text-gray-900">
+    <header class="fixed inset-x-0 top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+          <a href="<%= root_path %>" class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-md bg-gradient-to-br from-indigo-600 to-purple-600"></span>
+            <span class="text-xl font-extrabold text-indigo-600">Zenova</span>
+          </a>
+
+          <nav class="hidden md:flex items-center gap-6">
+            <%= link_to "Events", events_path, class: "text-gray-600 hover:text-indigo-600" %>
+            <%= link_to "Bookings", bookings_path, class: "text-gray-600 hover:text-indigo-600" %>
+          </nav>
+
+          <div class="flex items-center gap-3">
+            <% if user_signed_in? %>
+              <span class="hidden sm:inline text-gray-700">Hi, <%= current_user.name.presence || current_user.email %></span>
+              <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" %>
+            <% else %>
+              <%= link_to "Sign in", new_user_session_path, class: "text-gray-600 hover:text-indigo-600" %>
+              <%= link_to "Sign up", new_user_registration_path, class: "ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="pt-20">
+      <%= yield %>
+    </main>
   </body>
 </html>

@@ -1,0 +1,51 @@
+<section class="bg-gradient-to-r from-indigo-600 via-violet-600 to-pink-600 text-white">
+  <div class="max-w-7xl mx-auto px-6 py-24 text-center">
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">Discover & Book Events, Effortlessly</h1>
+    <p class="mt-4 text-lg sm:text-xl text-indigo-100 max-w-2xl mx-auto">Zenova combines clean design and simple booking flows — find curated events and reserve your spot in seconds.</p>
+    <div class="mt-8 flex justify-center gap-4">
+      <%= link_to "Explore Events", events_path, class: "inline-flex items-center px-6 py-3 bg-white text-indigo-600 rounded-lg shadow-lg" %>
+      <%= link_to "Sign up — it's free", new_user_registration_path, class: "inline-flex items-center px-6 py-3 bg-white/20 border border-white/30 text-white rounded-lg" %>
+    </div>
+  </div>
+</section>
+
+<section class="py-16 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="text-3xl font-bold text-gray-900">Upcoming Events</h2>
+      <%= link_to "View all", events_path, class: "text-indigo-600 hover:underline" %>
+    </div>
+
+    <% events = @events.presence || Event.limit(3) %>
+
+    <% if events.any? %>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <% events.each do |event| %>
+          <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition">
+            <div class="h-44 bg-gray-200">
+              <img src="https://picsum.photos/seed/event-<%= event.id || rand(9999) %>/800/400" alt="" class="w-full h-full object-cover">
+            </div>
+            <div class="p-5">
+              <h3 class="text-lg font-semibold text-gray-900 mb-1"><%= event.title %></h3>
+              <p class="text-sm text-gray-500 mb-3"><%= truncate(event.description.to_s, length: 100) %></p>
+              <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-500">
+                  <div>📍 <span class="font-medium text-gray-700"><%= event.location.presence || "TBA" %></span></div>
+                  <div class="mt-1">🗓 <span class="text-gray-600"><%= event.start_time.present? ? event.start_time.strftime("%b %d, %Y • %I:%M %p") : "TBA" %></span></div>
+                </div>
+                <div class="text-right">
+                  <div class="text-lg font-semibold text-gray-900"><%= number_to_currency(event.price || 0) %></div>
+                  <%= link_to "View", event_path(event), class: "mt-3 inline-block text-indigo-600 font-medium hover:underline" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="rounded-xl bg-white p-8 shadow text-center">
+        <p class="text-gray-600">No events available right now — try `rails db:seed` or create one from admin.</p>
+      </div>
+    <% end %>
+  </div>
+</section>
