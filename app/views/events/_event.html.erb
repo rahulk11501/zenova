@@ -1,37 +1,22 @@
-<div id="<%= dom_id event %>">
-  <p>
-    <strong>Title:</strong>
-    <%= event.title %>
-  </p>
+<div class="bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden">
+  <div class="h-48 bg-gray-200">
+    <img src="https://picsum.photos/seed/event-<%= event.id %>/800/400"
+         alt="<%= event.title %>"
+         class="w-full h-full object-cover">
+  </div>
+  <div class="p-5">
+    <h2 class="text-xl font-bold text-gray-900 mb-1"><%= event.title %></h2>
+    <p class="text-sm text-gray-500 mb-3"><%= truncate(event.description, length: 100) %></p>
 
-  <p>
-    <strong>Description:</strong>
-    <%= event.description %>
-  </p>
+    <div class="text-sm text-gray-500 mb-3">
+      📍 <span class="font-medium text-gray-700"><%= event.location %></span><br>
+      🗓 <%= event.start_time.strftime("%b %d, %Y • %I:%M %p") %> – <%= event.end_time.strftime("%I:%M %p") %>
+    </div>
 
-  <p>
-    <strong>Location:</strong>
-    <%= event.location %>
-  </p>
-
-  <p>
-    <strong>Start time:</strong>
-    <%= event.start_time %>
-  </p>
-
-  <p>
-    <strong>End time:</strong>
-    <%= event.end_time %>
-  </p>
-
-  <p>
-    <strong>Capacity:</strong>
-    <%= event.capacity %>
-  </p>
-
-  <p>
-    <strong>Price:</strong>
-    <%= event.price %>
-  </p>
-
+    <div class="flex items-center justify-between">
+      <span class="text-lg font-semibold text-gray-900"><%= number_to_currency(event.price) %></span>
+      <%= link_to "View", event_path(event),
+                  class: "px-4 py-2 text-indigo-600 font-medium hover:underline" %>
+    </div>
+  </div>
 </div>
