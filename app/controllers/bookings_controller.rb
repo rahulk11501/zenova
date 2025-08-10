@@ -1,27 +1,30 @@
 class BookingsController < ApplicationController
-  before_action :set_booking, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :set_booking, only: %i[show edit update destroy]
+  before_action :authorize_booking!, only: %i[show edit update destroy]
 
-  # GET /bookings or /bookings.json
+  # GET /bookings
   def index
-    @bookings = Booking.all
+    @bookings = current_user.bookings.includes(:event)
   end
 
-  # GET /bookings/1 or /bookings/1.json
+  # GET /bookings/1
   def show
   end
 
   # GET /bookings/new
   def new
-    @booking = Booking.new
+    @event = Event.find(params[:event_id]) if params[:event_id].present?
+    @booking = current_user.bookings.new(event: @event)
   end
 
   # GET /bookings/1/edit
   def edit
   end
 
-  # POST /bookings or /bookings.json
+  # POST /bookings
   def create
-    @booking = Booking.new(booking_params)
+    @booking = current_user.bookings.new(booking_params)
 
     respond_to do |format|
       if @booking.save
@@ -34,7 +37,7 @@ class BookingsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /bookings/1 or /bookings/1.json
+  # PATCH/PUT /bookings/1
   def update
     respond_to do |format|
       if @booking.update(booking_params)
@@ -47,24 +50,26 @@ class BookingsController < ApplicationController
     end
   end
 
-  # DELETE /bookings/1 or /bookings/1.json
+  # DELETE /bookings/1
   def destroy
     @booking.destroy!
-
     respond_to do |format|
-      format.html { redirect_to bookings_path, status: :see_other, notice: "Booking was successfully destroyed." }
+      format.html { redirect_to bookings_path, status: :see_other, notice: "Booking was successfully canceled." }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_booking
-      @booking = Booking.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def booking_params
-      params.expect(booking: [ :user_id, :event_id, :status, :tickets_count ])
-    end
+  def set_booking
+    @booking = Booking.find(params[:id])
+  end
+
+  def authorize_booking!
+    redirect_to bookings_path, alert: "Not authorized." unless @booking.user == current_user
+  end
+
+  def booking_params
+    params.require(:booking).permit(:event_id, :status, :tickets_count)
+  end
 end

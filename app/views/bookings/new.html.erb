@@ -1,11 +1,4 @@
-<% content_for :title, "New booking" %>
-
-<h1>New booking</h1>
-
-<%= render "form", booking: @booking %>
-
-<br>
-
-<div>
-  <%= link_to "Back to bookings", bookings_path %>
+<div class="max-w-3xl mx-auto px-6 py-12">
+  <h1 class="text-3xl font-bold text-gray-900 mb-6">New Booking</h1>
+  <%= render "form", booking: @booking %>
 </div>

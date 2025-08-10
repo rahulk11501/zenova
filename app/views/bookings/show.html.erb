@@ -1,10 +1,22 @@
-<p style="color: green"><%= notice %></p>
+<div class="max-w-3xl mx-auto px-6 py-12">
+  <div class="bg-white rounded-xl shadow p-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-4"><%= @booking.event.title %></h1>
+    <p class="text-gray-600 mb-2">📍 <%= @booking.event.location %></p>
+    <p class="text-gray-600 mb-2">🗓 <%= @booking.event.start_time.strftime("%b %d, %Y %I:%M %p") %></p>
+    <p class="text-gray-600 mb-4">🎟 Tickets: <%= @booking.tickets_count %></p>
 
-<%= render @booking %>
+    <p class="inline-block px-3 py-1 rounded-full text-xs font-medium
+      <%= @booking.status == "confirmed" ? "bg-green-100 text-green-700" :
+          @booking.status == "pending" ? "bg-yellow-100 text-yellow-700" :
+          "bg-red-100 text-red-700" %>">
+      <%= @booking.status.capitalize %>
+    </p>
 
-<div>
-  <%= link_to "Edit this booking", edit_booking_path(@booking) %> |
-  <%= link_to "Back to bookings", bookings_path %>
-
-  <%= button_to "Destroy this booking", @booking, method: :delete %>
+    <div class="mt-8 flex gap-4">
+      <%= link_to "Edit", edit_booking_path(@booking),
+          class: "px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+      <%= link_to "Back", bookings_path,
+          class: "px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300" %>
+    </div>
+  </div>
 </div>

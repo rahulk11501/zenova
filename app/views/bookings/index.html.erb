@@ -1,16 +1,38 @@
-<p style="color: green"><%= notice %></p>
+<div class="max-w-7xl mx-auto px-6 py-12">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">My Bookings</h1>
+    <%= link_to "New Booking", new_booking_path,
+        class: "px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700" %>
+  </div>
 
-<% content_for :title, "Bookings" %>
-
-<h1>Bookings</h1>
-
-<div id="bookings">
-  <% @bookings.each do |booking| %>
-    <%= render booking %>
-    <p>
-      <%= link_to "Show this booking", booking %>
-    </p>
+  <% if @bookings.any? %>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <% @bookings.each do |booking| %>
+        <div class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
+          <h2 class="text-lg font-semibold text-gray-900"><%= booking.event.title %></h2>
+          <p class="text-sm text-gray-500 mb-2"><%= booking.event.location %></p>
+          <p class="text-sm text-gray-500">
+            🗓 <%= booking.event.start_time.strftime("%b %d, %Y %I:%M %p") %>
+          </p>
+          <p class="text-sm text-gray-500 mt-1">Tickets: <%= booking.tickets_count %></p>
+          <p class="mt-2 inline-block px-3 py-1 rounded-full text-xs font-medium
+            <%= booking.status == "confirmed" ? "bg-green-100 text-green-700" :
+                booking.status == "pending" ? "bg-yellow-100 text-yellow-700" :
+                "bg-red-100 text-red-700" %>">
+            <%= booking.status.capitalize %>
+          </p>
+          <div class="mt-4 flex justify-between items-center">
+            <%= link_to "View", booking_path(booking), class: "text-indigo-600 hover:underline text-sm" %>
+            <%= link_to "Cancel", booking_path(booking),
+                data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                class: "text-red-600 hover:underline text-sm" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-lg shadow p-8 text-center text-gray-500">
+      No bookings yet.
+    </div>
   <% end %>
 </div>
-
-<%= link_to "New booking", new_booking_path %>
